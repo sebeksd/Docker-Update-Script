@@ -1,6 +1,10 @@
 #!/bin/bash
 vInputFiles="$1"
 
+# This program is shared in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
 # Without parameter script will go through all yaml files and create/pull/recreate all of them
 #   also it will skip all files with "!" in front 
 # With yaml file name as parameter only that container will be created/pulled/recreated
