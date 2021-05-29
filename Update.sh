@@ -28,7 +28,7 @@ cSkipChar="!"
 if [ -z "$vInputFiles" ] 
 then
 	echo -e "${cBlue}Updating ${cGreen}ALL${cNC}"
-  vInputFiles=/CS_Configs/Compose/*.yaml
+  vInputFiles=*.yaml
   vSingleFileMode=false
 else
   echo -e "${cBlue}Updating only ${cGreen}${vInputFiles/#$cSkipChar}${cNC}"
