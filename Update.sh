@@ -1,5 +1,4 @@
 #!/bin/bash
-vInputFiles="$1"
 
 # This program is shared in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,20 +23,25 @@ cNC='\033[0m' # No Color
 # char used to ignore vInputFiles when doing "ALL"
 cSkipChar="!"
 
+vInputFiles="$1"
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 # Update ALL or single Container
 if [ -z "$vInputFiles" ] 
 then
-	echo -e "${cBlue}Updating ${cGreen}ALL${cNC}"
-  vInputFiles=*.yaml
+	echo -e "${cBlue}Updating ${cGreen}ALL${cBlue}, Working directory is ${cGreen}'$SCRIPT_DIR'${cNC}"
+  vInputFiles=$SCRIPT_DIR/*.yaml
   vSingleFileMode=false
 else
-  echo -e "${cBlue}Updating only ${cGreen}${vInputFiles/#$cSkipChar}${cNC}"
+  echo -e "${cBlue}Updating only ${cGreen}${vInputFiles/#$cSkipChar}${cBlue}, Working directory is ${cGreen}'$SCRIPT_DIR'${cNC}"
   vSingleFileMode=true
+  vInputFiles=$SCRIPT_DIR"/"$vInputFiles
 fi
 
 echo -e "${cBlue}Start Update${cNC}"
-echo -e "${cBlue}## Removing old images ##${cNC}"
-docker image prune -a -f
+#echo -e "${cBlue}## Removing old images ##${cNC}"
+#docker image prune -a -f
 echo -e "${cBlue}## Removing old volumes ##${cNC}"
 docker volume prune -f
 echo ""
@@ -53,7 +57,8 @@ do
     if [[ "$vSingleFileMode" = false ]]; 
     then
       vSKIPPED="$vSKIPPED  $vFilename \n"
-      echo -e "${cBlue}######################## Skipping ${cYellow}$vFilename ${cBlue}########################${cNC}\n" && continue; 
+      #echo -e "${cBlue}######################## Skipping ${cYellow}$vFilename ${cBlue}########################${cNC}\n"
+      continue 
     fi
   fi
 
