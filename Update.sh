@@ -135,6 +135,6 @@ fi
 
 # Log file with date and summary
 echo -e "$vSUMMARY"
-date +"### %Y-%m-%d %H:%M:%S ###" >> UpdateHistory.log
-echo -e "$vSUMMARY" | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' >> UpdateHistory.log
+date +"### %Y-%m-%d %H:%M:%S ###" >> "$SCRIPT_DIR/UpdateHistory.log"
+echo -e "$vSUMMARY" | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' >> "$SCRIPT_DIR/UpdateHistory.log"
 
