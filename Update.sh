@@ -83,7 +83,7 @@ do
 
   # to make sure we have enaugh free space remove all old images after every update
   # if no update was made skip (yes I know that single expression would be enough)
-  if [[ $vDOCKER_UP == *"Creating"* || $vDOCKER_UP == *"Recreating"* ]]; 
+  if [[ $vDOCKER_UP == *"Creat"* || $vDOCKER_UP == *"Recreat"* ]]; 
   then
     vUPDATED="$vUPDATED  $vFilename \n"
     echo -e "${cBlue}## Removing old images ##${cNC}"
