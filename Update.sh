@@ -5,9 +5,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 # Without parameter script will go through all yaml files and create/pull/recreate all of them
-#   also it will skip all files with "!" in front 
+#   - it will skip all files with "!" in front 
 # With yaml file name as parameter only that container will be created/pulled/recreated
-#   also script will NOT skip files with "!" in front
+#   - script will NOT skip files with "!" in front
+#   - file name can be provided with o without extension (.yaml, .yml)
 # Script will REBUILD custom images (with correct pair of compose "*.yaml" file and "*.dockerfile" file) 
 
 # Used naming scheme:
@@ -34,9 +35,20 @@ then
   vInputFiles=$SCRIPT_DIR/*.yaml
   vSingleFileMode=false
 else
+  if [ -f $SCRIPT_DIR"/"$vInputFiles ]; then
+    vInputFiles=$vInputFiles
+  elif [ -f $SCRIPT_DIR"/"$vInputFiles".yaml" ]; then
+    vInputFiles=$vInputFiles".yaml"
+  elif [ -f $SCRIPT_DIR"/"$vInputFiles".yml" ]; then
+    vInputFiles=$vInputFiles".yml"
+  else
+    echo "File '${vInputFiles}' not found!"
+    exit
+  fi 
+
   echo -e "${cBlue}Updating only ${cGreen}${vInputFiles/#$cSkipChar}${cBlue}, Working directory is ${cGreen}'$SCRIPT_DIR'${cNC}"
-  vSingleFileMode=true
   vInputFiles=$SCRIPT_DIR"/"$vInputFiles
+  vSingleFileMode=true
 fi
 
 echo -e "${cBlue}Start Update${cNC}"
@@ -50,6 +62,7 @@ for vFile in $vInputFiles
 do
   vFilename=$(basename -- "$vFile")
   vFilename="${vFilename%.*}" # remove extension
+  vFilenameLower=$(echo $vFilename | tr '[:upper:]' '[:lower:]') # docker-compose do not like upper case in stack name
 
   if [[ $vFilename == $cSkipChar* ]]; 
   then
@@ -64,13 +77,13 @@ do
 
   echo -e "${cBlue}######################## Updating ${cGreen}$vFilename ${cBlue}########################${cNC}"
   echo -e "${cBlue}## Checking for new images / build / pull ##${cNC}"
-  docker-compose -f $vFile -p $vFilename build --pull
+  docker-compose -f $vFile -p $vFilenameLower build --pull
     vExitCode_BUILD=$? # save exit code for later 
-  docker-compose -f $vFile -p $vFilename pull
+  docker-compose -f $vFile -p $vFilenameLower pull
     vExitCode_PULL=$? # save exit code for later
   echo -e "${cBlue}## Upgrade if needed ##${cNC}"
   # create or recreate/update container (all comand output catched to variable for further use)
-  vDOCKER_UP=$(docker-compose -f $vFile -p $vFilename up -d 2>&1) 
+  vDOCKER_UP=$(docker-compose -f $vFile -p $vFilenameLower up -d 2>&1) 
     vExitCode_UP=$? # save exit code for later
   echo "$vDOCKER_UP" # all output was catched to variable so we need to write it to terminal
 
