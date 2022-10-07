@@ -6,7 +6,8 @@
 ## Description ##
 Simple script designed for "home" use to update multiply docker containers. Script should be run from same directory as docker-compose configuration files are contained in.
 It also support building images from docker file + docker-compose file.
-Env files are also supported, when env file with same name as ".yaml" file is present script will use it with docekr-compose, e.g. MySQL.env + MySQL.yaml in same directory (script will show info about that when env file is used).
+
+Env files are also supported, when env file with same name as ".yaml" file is present script will use it with docekr-compose, e.g. MySQL.env + MySQL.yaml in same directory (script will show info about that).
 
 ## Usage: ##
 - Run script to update all containers (files with "!" as prefix are ignored): ./Update.sh
