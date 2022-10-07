@@ -63,6 +63,7 @@ do
   vFilename=$(basename -- "$vFile")
   vFilename="${vFilename%.*}" # remove extension
   vFilenameLower=$(echo $vFilename | tr '[:upper:]' '[:lower:]') # docker-compose do not like upper case in stack name
+  vEnvFilename="$SCRIPT_DIR/${vFilename}.env"
 
   if [[ $vFilename == $cSkipChar* ]]; 
   then
@@ -76,14 +77,23 @@ do
   fi
 
   echo -e "${cBlue}######################## Updating ${cGreen}$vFilename ${cBlue}########################${cNC}"
+
+  # check if env file with same name as yaml exists, if yes use it in docker-compose up --env-file
+  vUseEnv=""
+  if test -f "$vEnvFilename"; then
+    echo -e "${cYellow}Found ENV configuration file, will use it with compose.${cNC}"
+	vUseEnv="--env-file $vEnvFilename"
+  fi
+
   echo -e "${cBlue}## Checking for new images / build / pull ##${cNC}"
-  docker-compose -f $vFile -p $vFilenameLower build --pull
+  docker-compose -f $vFile -p $vFilenameLower $vUseEnv build --pull
     vExitCode_BUILD=$? # save exit code for later 
-  docker-compose -f $vFile -p $vFilenameLower pull
+  docker-compose -f $vFile -p $vFilenameLower $vUseEnv pull
     vExitCode_PULL=$? # save exit code for later
   echo -e "${cBlue}## Upgrade if needed ##${cNC}"
+
   # create or recreate/update container (all comand output catched to variable for further use)
-  vDOCKER_UP=$(docker-compose -f $vFile -p $vFilenameLower up -d 2>&1) 
+  vDOCKER_UP=$(docker-compose -f $vFile -p $vFilenameLower $vUseEnv up -d 2>&1) 
     vExitCode_UP=$? # save exit code for later
   echo "$vDOCKER_UP" # all output was catched to variable so we need to write it to terminal
 
