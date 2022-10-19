@@ -25,16 +25,26 @@ Containers that don't require update (no changes found) will not be restarted.
 - Result: Create or update (without build) only MySQL (can contain multiply containers) 
 - Extension ".yaml" can be omitted
 
+## Additional options ##
+ -c - check only, it will pull images without updating running containers, in this mode there is no cleanup (ignores -r0, -r1, -r2, -rv, -ri, -po)\
+ -r0, -r1, -r2 - cleanup options, r0 - no cleanup, r1 - cleanup on script finish, r2 - cleanup after every update (useful when low on disk space)\
+ -rv - cleanup only volumes (works with -r1 and -r2)\
+ -ri - cleanup only images (works with -r1 and -r2)\
+ -po - "pulled only" update containers that have already pulled images only, can be used after first running script with -c\
+ 
+Default is: -r1 (both unused images and volumes will be removed)
+
 ## File structure example: ##
-Yaml file can contain multiply containers definition, it can also contain "image" node or "build" node, e.g.: \
-1. 
+Yaml file can contain multiply containers definition, it can also contain "image" node or "build" node, e.g.:
+
+Image:
 ```
 version: "3.5"
 services:
   nodered:
     image: nodered/node-red
 ```
-2.
+Build:
 ```
 version: "3.5"
 services:
