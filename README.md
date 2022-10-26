@@ -26,6 +26,7 @@ Containers that don't require update (no changes found) will not be restarted.
 - Extension ".yaml" can be omitted
 
 ## Additional options ##
+ -h, --help - Help message
  -c - check only, it will pull images without updating running containers, in this mode there is no cleanup (ignores -r0, -r1, -r2, -rv, -ri, -po)\
  -r0, -r1, -r2 - cleanup options, r0 - no cleanup, r1 - cleanup on script finish, r2 - cleanup after every update (useful when low on disk space)\
  -rv - cleanup only volumes (works with -r1 and -r2)\
