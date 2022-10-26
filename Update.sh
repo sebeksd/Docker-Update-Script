@@ -24,6 +24,36 @@
 # Used naming scheme:
 # cNAME - const, vName - variable, vNAME - all caps variable for "Text" (multiline) 
 
+showHelp(){
+  [[ -n $1 ]] && printf "\n $1\n" >&2
+
+cat >&2 << helpMessage
+
+ Usage: ${0##*/} without parameter will go through all yaml files and create/pull/recreate all of them
+   - it will skip all files with "!" in front 
+   
+ With yaml file name as parameter only that container will be created/pulled/recreated
+   - script will NOT skip files with "!" in front
+   - file name can be provided with or without extension (.yaml, .yml)
+   
+ Script will: 
+   - REBUILD custom images (with correct pair of compose "*.yaml" file and "*.dockerfile" file) 
+   - use ENV file (with correct pair of compose "*.yaml" file and "*.env" file) 
+   
+ Additional options are:
+   -c - check only, it will pull images without updating running containers, in this mode there is no cleanup (ignores -r0, -r1, -r2, -rv, -ri, -po) 
+   -r0, -r1, -r2 - different cleanup options, r0 - no cleanup, r1 - cleanup on script finish, r2 - cleanup after every update (useful when low on disk space)
+   -rv - cleanup only volumes (works with -r1 and -r2)
+   -ri - cleanup only images (works with -r1 and -r2)
+   -po - "pulled only" update containers that have already pulled images only, can be used after first running script with -c
+ 
+ Default is: -r1 (both unused images and volumes will be removed)
+
+helpMessage
+
+    exit 1
+}
+
 # colors
 cBlue='\033[0;36m'
 cGreen='\033[0;32m'
@@ -58,6 +88,10 @@ do
     -ri) vCleanupOnlyImages=true;;
     -po) vUpdatePulledOnly=true;;
     -c) vNoUpdate=true;;
+	-h | --help)
+          showHelp  
+          exit 0
+          ;;
     *) vInputFiles="$arg";;
   esac
 done
