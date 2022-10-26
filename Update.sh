@@ -46,10 +46,8 @@ cat >&2 << helpMessage
    -rv - cleanup only volumes (works with -r1 and -r2)
    -ri - cleanup only images (works with -r1 and -r2)
    -po - "pulled only" update containers that have already pulled images only, can be used after first running script with -c
+ 
  Default is: -r1 (both unused images and volumes will be removed)
-
- Used naming scheme:
- cNAME - const, vName - variable, vNAME - all caps variable for "Text" (multiline)
 
 helpMessage
 
