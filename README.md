@@ -13,7 +13,9 @@ Env files are also supported, when env file with same name as ".yaml" file is pr
 - Run script to update all containers (files with "!" as prefix are ignored): ./Update.sh
 - Run script providing a single file name to update only that container (files with "!" are NOT ignored): ./Update.sh NextCloud.yaml (extension can be omitted)
 
-Containers that don't require update (no changes found) will not be restarted.
+Containers (by default): 
+- that don't require update (no changes found) will not be restarted.
+- that are in state stopped/created will be updated but not started.
 
 ## How to run ##
 1. Directory contains: Update.sh, NextCloud.yaml, Nextcloud.dockerfile, MySQL.yaml
@@ -40,14 +42,12 @@ Yaml file can contain multiply containers definition, it can also contain "image
 
 Image:
 ```
-version: "3.5"
 services:
   nodered:
     image: nodered/node-red
 ```
 Build:
 ```
-version: "3.5"
 services:
   nextcloud:
     build:
