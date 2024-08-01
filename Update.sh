@@ -265,9 +265,9 @@ do
     # parsing and displaying output of docker-compose pull at the same time is hard so instead
     # we count docker images before and after
     if [[ $vImagesCountPre < $vImagesCountPost ]]; then
-      vUPDATED="$vUPDATED  $vFilename \n"
+      vUPDATED="$vUPDATED  ${cGreen}$vFilename${cNC}\n"
     else
-      vNOT_UPDATED="$vNOT_UPDATED  $vFilename \n"
+      vNOT_UPDATED="$vNOT_UPDATED  ${cGreen}$vFilename${cNC}\n"
     fi
   else
     # if no update was made skip
