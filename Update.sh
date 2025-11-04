@@ -183,7 +183,7 @@ for vFile in $vInputFiles
 do
   vFilename=$(basename -- "$vFile")
   vFilename="${vFilename%.*}" # remove extension
-  vFilenameLower=$(echo $vFilename | tr '[:upper:]' '[:lower:]') # docker-compose do not like upper case in stack name
+  vFilenameLower=$(echo $vFilename | tr '[:upper:]' '[:lower:]') # docker compose do not like upper case in stack name
   vEnvFilename="$cSCRIPT_DIR/${vFilename}.env"
 
   if [[ $vFilename == $cSkipChar* ]]; then
@@ -201,7 +201,7 @@ do
     echo -e "${cBlue}######################## Checking/Pulling ${cGreen}$vFilename ${cBlue}########################${cNC}"
   fi
 
-  # check if env file with same name as yaml exists, if yes use it in docker-compose up --env-file
+  # check if env file with same name as yaml exists, if yes use it in docker compose up --env-file
   vUseEnv=""
   if test -f "$vEnvFilename"; then
     echo -e "${cYellow}Found ENV configuration file, will use it with compose.${cNC}"
@@ -212,9 +212,9 @@ do
   if [[ "$vUpdatePulledOnly" == false ]]; then
     echo -e "${cBlue}## Checking for new images / build / pull ##${cNC}"
     vImagesCountPre=$(docker images -q | wc -l)
-    docker-compose -f $vFile -p $vFilenameLower $vUseEnv build --pull
+    docker compose -f $vFile -p $vFilenameLower $vUseEnv build --pull
       vExitCode_BUILD=$? # save exit code for later 
-    docker-compose -f $vFile -p $vFilenameLower $vUseEnv pull
+    docker compose -f $vFile -p $vFilenameLower $vUseEnv pull
       vExitCode_PULL=$? # save exit code for later
     vImagesCountPost=$(docker images -q | wc -l)
   else
@@ -247,7 +247,7 @@ do
       echo -e "${cYellow} Container does not exist, trying to Create${cNC}"
     fi
 
-    vDOCKER_UP=$(docker-compose -f $vFile -p $vFilenameLower $vUseEnv up $vShouldStart -d 2>&1) 
+    vDOCKER_UP=$(docker compose -f $vFile -p $vFilenameLower $vUseEnv up $vShouldStart -d 2>&1) 
     vExitCode_UP=$? # save exit code for later
 
     echo "$vDOCKER_UP" # all output was catched to variable so we need to write it to terminal
@@ -262,7 +262,7 @@ do
   fi
 
   if [ "$vNoUpdate" = true ]; then
-    # parsing and displaying output of docker-compose pull at the same time is hard so instead
+    # parsing and displaying output of docker compose pull at the same time is hard so instead
     # we count docker images before and after
     if [[ $vImagesCountPre < $vImagesCountPost ]]; then
       vUPDATED="$vUPDATED  ${cGreen}$vFilename${cNC}\n"
